@@ -15,6 +15,7 @@ import { ReportEntity } from './modules/reports/entities/report.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
+      url: process.env.DATABASE_URL,
       host: process.env.DB_HOST ?? 'localhost',
       port: parseInt(process.env.DB_PORT ?? '5432', 10),
       username: process.env.DB_USERNAME ?? 'costant_user',
@@ -23,6 +24,9 @@ import { ReportEntity } from './modules/reports/entities/report.entity';
       entities: [ReportEntity],
       synchronize: process.env.NODE_ENV === 'development', // Only true in development
       logging: process.env.NODE_ENV === 'development',
+      ssl: {
+        rejectUnauthorized: false, // Required for Supabase SSL
+      },
     }),
     ProjectsModule,
     ReportsModule,

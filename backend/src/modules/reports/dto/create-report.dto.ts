@@ -2,6 +2,20 @@ import { IsString, IsOptional, Max, IsIn, IsNumber, ValidateNested } from 'class
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 
+export class LocationDto {
+  @ApiProperty({ example: -25.9685 })
+  @IsNumber()
+  readonly lat: number;
+
+  @ApiProperty({ example: 32.5865 })
+  @IsNumber()
+  readonly lng: number;
+
+  @ApiProperty({ example: 'Estrada Nacional EN1, Maputo' })
+  @IsString()
+  readonly address: string;
+}
+
 export class CreateReportDto {
   @ApiPropertyOptional({
     description: 'Project ID being reported',
@@ -67,18 +81,4 @@ export class CreateReportDto {
   @IsOptional()
   @Max(10)
   readonly source: string = 'pwa';
-}
-
-export class LocationDto {
-  @ApiProperty({ example: -25.9685 })
-  @IsNumber()
-  readonly lat: number;
-
-  @ApiProperty({ example: 32.5865 })
-  @IsNumber()
-  readonly lng: number;
-
-  @ApiProperty({ example: 'Estrada Nacional EN1, Maputo' })
-  @IsString()
-  readonly address: string;
 }
