@@ -9,7 +9,7 @@ import { MapPin, AlertCircle, Users, Calendar, Clock, TrendingUp } from 'lucide-
 import Link from 'next/link';
 
 // Mock data for development
-const mockProjectDetails = {
+const mockProjectDetails: { [key: string]: any } = {
   'mock-001': {
     id: 'mock-001',
     ocid: 'ocds-mock-001',
@@ -121,14 +121,13 @@ export default function ProjectDetailsPage() {
               <div>
                 <CardDescription className="text-sm">Progresso</CardDescription>
                 <div className="flex items-center space-x-2">
-                  <div className="progress">
+                  <div className="w-full bg-gray-200 rounded-full h-4">
                     <div
-                      className="progress-bar"
-                      style={{ width: `${project.progresso}%`, backgroundColor: getProgressColor(project.progresso) }}
+                      className={`h-4 rounded-full ${getProgressColor(project.progresso)}`}
+                      style={{ width: `${project.progresso}%` }}
                     />
                   </div>
                   <span className="text-2xl font-bold text-gray-900">{project.progresso}%</span>
-                </div>
                 </div>
               </div>
               <div>
@@ -147,6 +146,7 @@ export default function ProjectDetailsPage() {
                 <p className="text-lg font-semibold">{project.contratante}</p>
               </div>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <CardDescription className="text-sm">Método Procurement</CardDescription>
@@ -157,9 +157,8 @@ export default function ProjectDetailsPage() {
                 <p className="text-lg font-semibold">{project.contratado}</p>
               </div>
             </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <CardDescription className="text-sm flex items-center mb-2">
                   <MapPin className="w-4 h-4 mr-2" />
@@ -176,7 +175,7 @@ export default function ProjectDetailsPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <CardDescription className="text-sm flex items-center mb-2">
                   <Calendar className="w-4 h-4 mr-2" />
@@ -193,7 +192,7 @@ export default function ProjectDetailsPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <CardDescription className="text-sm flex items-center mb-2">
                   <TrendingUp className="w-4 h-4 mr-2" />
@@ -201,8 +200,6 @@ export default function ProjectDetailsPage() {
                 </CardDescription>
                 <p className="text-lg font-semibold">Em Andamento</p>
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <CardDescription className="text-sm flex items-center mb-2">
                   <AlertCircle className="w-4 h-4 mr-2" />
@@ -211,33 +208,32 @@ export default function ProjectDetailsPage() {
                 <p className="text-lg font-semibold">{project.estado}</p>
               </div>
             </div>
-          </div>
 
-          {/* Actions */}
-          <div className="flex flex-col sm:flex-row sm:space-y-4 space-x-4 mt-6">
-            <Link href={`/projects/${id}/reports/new`} className="flex-1">
-              <Button variant="outline" className="w-full">
-                <AlertCircle className="w-4 h-4 mr-2" />
-                Fazer um Relato
-              </Button>
-            </Link>
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row sm:space-y-0 space-y-4 space-x-4 mt-6">
+              <Link href={`/projects/${id}/reports/new`} className="flex-1">
+                <Button variant="outline" className="w-full">
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Fazer um Relato
+                </Button>
+              </Link>
 
-            <Link href="/projects" className="flex-1">
-              <Button variant="secondary" className="w-full">
-                <MapPin className="w-4 h-4 mr-2" />
-                Voltar para Lista
-              </Button>
-            </Link>
-          </div>
-
-          {/* Error Display */}
-          {error && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 font-medium">{error}</p>
+              <Link href="/projects" className="flex-1">
+                <Button variant="secondary" className="w-full">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Voltar para Lista
+                </Button>
+              </Link>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {/* Error Display */}
+            {error && (
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800 font-medium">{error}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -251,8 +247,8 @@ function getProgressColor(progress: number): string {
   return 'bg-red-500';
 }
 
-function formatDate(date: string): string {
-  const date = new Date(date);
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
   return new Intl.DateTimeFormat('pt-MZ', {
     day: '2-digit',
     month: '2-digit',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -54,7 +54,7 @@ export default function UssdSimulatorPage() {
       if (result.continue) {
         setSessionId(result.sessionId || sessionId);
       }
-    } catch (error) {
+    } catch (error: any) {
       setLogs(prev => [...prev, `Erro: ${error.message}`]);
       setMessage('Erro ao enviar requisição USSD');
     } finally {
@@ -69,133 +69,134 @@ export default function UssdSimulatorPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white text-gray-900 p-4">
       <div className="container mx-auto px-4 py-8">
-        <Card className="max-w-2xl">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-blue-600" />
-              <h1 className="text-2xl font-bold text-blue-600">Simulador USSD</h1>
-              <Badge className="ml-2">DEMO</Badge>
-            </CardTitle>
-            <CardDescription>
-              Simulador de interface USSD para o projeto Costant
-            </CardDescription>
-          </CardHeader>
+        <div className="flex flex-col items-center space-y-6">
+          <Card className="max-w-2xl w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-blue-600" />
+                <h1 className="text-2xl font-bold text-blue-600">Simulador USSD</h1>
+                <Badge className="ml-2">DEMO</Badge>
+              </CardTitle>
+              <CardDescription>
+                Simulador de interface USSD para o projeto Costant
+              </CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <div className="space-y-4">
-              {/* Phone Number Input */}
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Digite seu número de telefone (formato: +2588XXXXXXX)"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Message Input */}
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Digite a mensagem USSD (max 160 caracteres)"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full"
-                  maxLength={160}
-                />
-              </div>
-
-              {/* Send Button */}
-              <Button
-                onClick={handleSendUssd}
-                disabled={isLoading}
-                className="w-full"
-              >
-                {isLoading ? 'Enviando...' : 'Enviar USSD'}
-              </Button>
-
-              {/* Session Info */}
-              {sessionId && (
-                <div className="mt-4 p-4 bg-blue-100 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Sessão Ativa:</strong> {sessionId}
-                  </p>
-                </div>
-              )}
-
-              {/* Logs */}
-              <div className="mt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Logs da Sessão</h3>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleClearLogs}
-                  >
-                    Limpar Logs
-                  </Button>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Phone Number Input */}
+                <div>
+                  <Input
+                    type="text"
+                    placeholder="Digite seu número de telefone (formato: +2588XXXXXXX)"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="w-full"
+                  />
                 </div>
 
-                <div className="bg-gray-100 rounded-lg p-4 max-h-96 overflow-y-auto">
-                  {logs.length === 0 ? (
-                    <p className="text-gray-500 text-center">Nenhuma requisição ainda</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {logs.map((log, index) => (
-                        <div
-                          key={index}
-                          className="bg-white p-3 rounded border border-gray-200"
-                        >
-                          <div className="font-mono text-sm text-gray-700">{log}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                {/* Message Input */}
+                <div>
+                  <Input
+                    type="text"
+                    placeholder="Digite a mensagem USSD (max 160 caracteres)"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full"
+                    maxLength={160}
+                  />
+                </div>
+
+                {/* Send Button */}
+                <Button
+                  onClick={handleSendUssd}
+                  disabled={isLoading}
+                  className="w-full"
+                >
+                  {isLoading ? 'Enviando...' : 'Enviar USSD'}
+                </Button>
+
+                {/* Session Info */}
+                {sessionId && (
+                  <div className="mt-4 p-4 bg-blue-100 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>Sessão Ativa:</strong> {sessionId}
+                    </p>
+                  </div>
+                )}
+
+                {/* Logs */}
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Logs da Sessão</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleClearLogs}
+                    >
+                      Limpar Logs
+                    </Button>
+                  </div>
+
+                  <div className="bg-gray-100 rounded-lg p-4 max-h-96 overflow-y-auto">
+                    {logs.length === 0 ? (
+                      <p className="text-gray-500 text-center">Nenhuma requisição ainda</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {logs.map((log, index) => (
+                          <div
+                            key={index}
+                            className="bg-white p-3 rounded border border-gray-200"
+                          >
+                            <div className="font-mono text-sm text-gray-700">{log}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Info Card */}
-        <Card className="max-w-2xl mt-6">
-          <CardHeader>
-            <CardTitle>
-              <Wifi className="w-5 h-5 mr-2" />
-              <h3 className="text-2xl font-bold text-blue-600">Como Funciona</h3>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p className="text-gray-700">
-                <strong>1. Discar *555#</strong> no seu telefone
-              </p>
-              <p className="text-gray-700">
-                <strong>2. Selecione as opções:</strong> Siga as instruções do menu
-              </p>
-              <p className="text-gray-700">
-                <strong>3. Relatar problema:</strong> Escolha o tipo de problema e descreva
-              </p>
-              <p className="text-gray-700">
-                <strong>4. Sair:</strong> Encerra a sessão
-              </p>
-              <p className="text-gray-700">
-                <strong>Limitações:</strong> Máximo de 160 caracteres por resposta
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        </div>
+          {/* Info Card */}
+          <Card className="max-w-2xl w-full">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Wifi className="w-5 h-5 mr-2 text-blue-600" />
+                <h3 className="text-lg font-semibold text-blue-600">Como Funciona</h3>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-gray-700">
+                  <strong>1. Discar *555#</strong> no seu telefone
+                </p>
+                <p className="text-gray-700">
+                  <strong>2. Selecione as opções:</strong> Siga as instruções do menu
+                </p>
+                <p className="text-gray-700">
+                  <strong>3. Relatar problema:</strong> Escolha o tipo de problema e descreva
+                </p>
+                <p className="text-gray-700">
+                  <strong>4. Sair:</strong> Encerra a sessão
+                </p>
+                <p className="text-gray-700">
+                  <strong>Limitações:</strong> Máximo de 160 caracteres por resposta
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Navigation */}
-        <div className="flex justify-center">
-          <Link href="/projects">
-            <Button variant="outline">
-              <MapPin className="w-4 h-4 mr-2" />
-              Ver Projetos
-            </Button>
-          </Link>
+          {/* Navigation */}
+          <div className="mt-6">
+            <Link href="/projects">
+              <Button variant="outline">
+                <MapPin className="w-4 h-4 mr-2" />
+                Ver Projetos
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

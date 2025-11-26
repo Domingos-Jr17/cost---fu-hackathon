@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Link } from 'next/navigation';
+import Link from 'next/link';
 import { MapPin, AlertCircle, Users, TrendingUp, EyeOff } from 'lucide-react';
 
 interface Report {

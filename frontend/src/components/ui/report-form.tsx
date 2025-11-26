@@ -26,6 +26,8 @@ export default function ReportForm({ projectId, onSubmit, initialData }: ReportF
   const [formData, setFormData] = useState({
     type: initialData?.type || 'qualidade',
     description: initialData?.description || '',
+    photo: initialData?.photo,
+    location: initialData?.location,
   });
 
   const [isLoading, setIsLoading] = useState(false);
