@@ -5,10 +5,11 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0066CC",
-  "orientation": "portrait-primary",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
   "scope": "/",
   "lang": "pt-MZ",
+  "dir": "ltr",
   "categories": ["government", "utilities", "education"],
   "screenshots": [
     {
@@ -16,14 +17,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Lista de projetos no desktop"
+      "label": "Costant Desktop - Lista de Projetos"
     },
     {
       "src": "/screenshots/mobile-1.png",
       "sizes": "375x667",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Lista de projetos no mobile"
+      "label": "Costant Mobile - Projetos de Infraestrutura"
     }
   ],
   "icons": [
@@ -82,24 +83,14 @@
       "short_name": "Projetos",
       "description": "Ver todos os projetos de infraestrutura",
       "url": "/projects",
-      "icons": [
-        {
-          "src": "/icons/shortcut-projects.png",
-          "sizes": "96x96"
-        }
-      ]
+      "icons": [{ "src": "/icons/shortcut-projects.png", "sizes": "96x96" }]
     },
     {
       "name": "Fazer Relato",
       "short_name": "Relatar",
       "description": "Reportar problemas em projetos",
       "url": "/reports/new",
-      "icons": [
-        {
-          "src": "/icons/shortcut-report.png",
-          "sizes": "96x96"
-        }
-      ]
+      "icons": [{ "src": "/icons/shortcut-report.png", "sizes": "96x96" }]
     }
   ],
   "related_applications": [
