@@ -1,0 +1,116 @@
+{
+  "name": "Costant - Transparência de Infraestrutura",
+  "short_name": "Costant",
+  "description": "A Ponte entre os Dados da Infraestrutura e Todos os Cidadãos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066CC",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-MZ",
+  "categories": ["government", "utilities", "education"],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Lista de projetos no desktop"
+    },
+    {
+      "src": "/screenshots/mobile-1.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Lista de projetos no mobile"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver Projetos",
+      "short_name": "Projetos",
+      "description": "Ver todos os projetos de infraestrutura",
+      "url": "/projects",
+      "icons": [
+        {
+          "src": "/icons/shortcut-projects.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Fazer Relato",
+      "short_name": "Relatar",
+      "description": "Reportar problemas em projetos",
+      "url": "/reports/new",
+      "icons": [
+        {
+          "src": "/icons/shortcut-report.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=mz.costant.app",
+      "id": "mz.costant.app"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
