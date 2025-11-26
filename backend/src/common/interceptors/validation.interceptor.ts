@@ -8,7 +8,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Request, Response } from 'express';
-import { validateMozambiquePhone, sanitizeDescription } from '../utils/validation.util';
+import { isValidMozambiquePhone, sanitizeDescription } from '../utils/validation.util';
 
 @Injectable()
 export class ValidationInterceptor implements NestInterceptor {
@@ -29,7 +29,7 @@ export class ValidationInterceptor implements NestInterceptor {
       const body = request.body;
 
       // Validação de telefone moçambicano
-      if (body.phone && !validateMozambiquePhone(body.phone)) {
+      if (body.phone && !isValidMozambiquePhone(body.phone)) {
         console.warn(`Invalid phone number: ${body.phone} from IP: ${request.ip}`);
         throw new BadRequestException('Número de telefone moçambicano inválido');
       }

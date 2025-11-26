@@ -66,7 +66,7 @@ export class DataTransformUtil {
     const formattedValue = this.formatCurrency(costProject.contractValue?.amount || costProject.value?.amount || 0);
 
     // Extract province and sector from location or description
-    const { province, sector } = this.extractLocationAndSector(costProject);
+    const { provincia, setor } = this.extractLocationAndSector(costProject);
 
     return {
       id: costProject.id || costProject.ocid,
@@ -161,7 +161,7 @@ export class DataTransformUtil {
   /**
    * Extract province and sector from location or other fields
    */
-  private static extractLocationAndSector(project: CostProject): { province: string; sector: string } {
+  private static extractLocationAndSector(project: CostProject): { provincia: string; setor: string } {
     // List of Mozambique provinces
     const provinces = [
       'Maputo', 'Maputo Cidade', 'Gaza', 'Inhambane', 'Manica',
@@ -208,7 +208,7 @@ export class DataTransformUtil {
       sector = categoryMap[project.procurementCategory.toLowerCase()] || project.procurementCategory;
     }
 
-    return { province, sector };
+    return { provincia: province, setor: sector };
   }
 
   /**

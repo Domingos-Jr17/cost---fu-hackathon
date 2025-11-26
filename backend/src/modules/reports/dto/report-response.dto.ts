@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 /**
  * Response DTO for report creation
@@ -8,11 +9,12 @@ export class ReportResponseDto {
     description: 'Success message for report creation',
     example: 'Relato criado com sucesso'
   })
+  readonly message: string;
+
   @ApiProperty({
     description: 'Report ID for tracking',
     example: 'report_abc123'
   })
   @Type(() => String)
-  @ApiProperty()
   readonly reportId: string;
 }

@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Param, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, HttpCode, HttpStatus, Query, Headers, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { HashUtil } from '../../common/utils/hash.util';
 
 import { ReportsService } from './reports.service';
 import { CreateReportDto, ReportResponseDto, GetReportsDto, ReportsResponseDto } from './dto';
@@ -25,8 +26,11 @@ export class ReportsController {
   })
   async createReport(
     @Body() createReportDto: CreateReportDto,
-    ipHash: string,
+    @Headers('x-forwarded-for') ip: string,
+    @Headers('x-real-ip') realIp: string,
   ): Promise<ReportResponseDto> {
+    const clientIp = ip || realIp || 'unknown';
+    const ipHash = HashUtil.hashIp(clientIp);
     return this.reportsService.createReport(createReportDto, ipHash);
   }
 

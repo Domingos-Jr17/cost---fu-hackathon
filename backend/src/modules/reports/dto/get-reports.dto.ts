@@ -1,5 +1,6 @@
-import { IsOptional, IsString, Max, Min } from 'class-validator';
-import { ApiPropertyOptional, ApiOperation } from '@nestjs/swagger';
+import { IsOptional, IsString, Max, Min, IsIn, IsNumber } from 'class-validator';
+import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 
 /**
  * DTO for getting reports with filters
@@ -38,8 +39,7 @@ export class GetReportsDto {
   })
   @IsOptional()
   @IsString()
-  @Type(() => Date)
-  readonly startDate?: Date;
+  readonly startDate?: string;
 
   @ApiPropertyOptional({
     description: 'Filter by date range (end)',
@@ -47,8 +47,7 @@ export class GetReportsDto {
   })
   @IsOptional()
   @IsString()
-  @Type(() => Date)
-  readonly endDate?: Date;
+  readonly endDate?: string;
 
   @ApiPropertyOptional({
     description: 'Number of results to return',
@@ -101,12 +100,13 @@ export class ReportsResponseDto {
     description: 'Array of citizen reports',
     type: [Object]
   })
+  reports: any[];
+
   @ApiProperty({
     description: 'Total number of reports matching filters',
     example: 150
   })
   @Type(() => Number)
-  @ApiProperty()
   readonly total: number;
 
   @ApiProperty({
@@ -114,22 +114,19 @@ export class ReportsResponseDto {
     example: 1
   })
   @Type(() => Number)
-  @ApiProperty()
-  readonly page: number = 1;
+  readonly page: number;
 
   @ApiProperty({
     description: 'Number of reports per page',
     example: 20
   })
   @Type(() => Number)
-  @ApiProperty()
-  readonly limit: number = 20;
+  readonly limit: number;
 
   @ApiProperty({
     description: 'Total number of pages',
     example: 8
   })
   @Type(() => Number)
-  @ApiProperty()
-  readonly totalPages: number = 8;
+  readonly totalPages: number;
 }

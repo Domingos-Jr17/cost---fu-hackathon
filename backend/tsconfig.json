@@ -22,5 +22,9 @@
       "@/modules/*": ["src/modules/*"],
       "@/common/*": ["src/common/*"]
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "src/@types/**/*"
+  ]
 }

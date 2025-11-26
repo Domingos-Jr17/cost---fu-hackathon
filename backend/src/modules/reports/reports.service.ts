@@ -1,32 +1,13 @@
 import { Injectable, Logger, HttpStatus, ConflictException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Between, MoreThanOrEqual, LessThanOrEqual, LessThan, And } from 'typeorm';
 import { DatabaseConfig } from '../../config/database.config';
 import { HashUtil } from '../../common/utils/hash.util';
+import { ReportEntity } from './entities/report.entity';
 
 import { CreateReportDto, ReportResponseDto } from './dto';
 import { GetReportsDto, ReportsResponseDto } from './dto';
-
-interface ReportEntity {
-  id: string;
-  project_id: string;
-  phone_hash: string;
-  ip_hash: string;
-  type: string;
-  description: string;
-  photo_url?: string;
-  location: {
-    lat: number;
-    lng: number;
-    address: string;
-  };
-  status: string;
-  source: string;
-  score: number;
-  created_at: Date;
-  updated_at: Date;
-}
 
 /**
  * Reports Service - Handles citizen reports with privacy and moderation
@@ -59,11 +40,11 @@ export class ReportsService {
 
       const reportsToday = await this.reportsRepository.find({
         where: {
-          phone_hash: phoneHash,
-          created_at: {
-            $gte: todayStart,
-          $lt: new Date(todayStart.getTime() + 24 * 60 * 60 * 1000),
-          },
+          phone_hash: phoneHash ? phoneHash : undefined,
+          created_at: And(
+            MoreThanOrEqual(todayStart),
+            LessThan(new Date(todayStart.getTime() + 24 * 60 * 60 * 1000))
+          ),
         },
       });
 
@@ -90,12 +71,12 @@ export class ReportsService {
       const report: Partial<ReportEntity> = {
         id: reportId,
         project_id: createReportDto.projectId,
-        phone_hash: phoneHash,
+        phone_hash: phoneHash || undefined,
         ip_hash: ipHash,
         type: createReportDto.type,
         description: createReportDto.description,
         photo_url: photoUrl,
-        location: createReportDto.location || null,
+        location: createReportDto.location || undefined,
         status: 'pendente',
         source: createReportDto.source,
         score,
@@ -143,26 +124,28 @@ export class ReportsService {
         where.type = filters.type;
       }
 
-      if (filters.startDate) {
-        where.created_at = {
-          $gte: filters.startDate,
-        };
+      // Date filtering for TypeORM - only apply if dates are provided as strings
+      if (filters.startDate && filters.endDate) {
+        where.created_at = And(
+          MoreThanOrEqual(new Date(filters.startDate)),
+          LessThanOrEqual(new Date(filters.endDate))
+        );
+      } else if (filters.startDate) {
+        where.created_at = MoreThanOrEqual(new Date(filters.startDate));
+      } else if (filters.endDate) {
+        where.created_at = LessThanOrEqual(new Date(filters.endDate));
       }
 
-      if (filters.endDate) {
-        where.created_at = {
-          $lte: filters.endDate,
-        };
-      }
-
-      // Get reports with pagination
+      // Get reports with pagination with default values
+      const page = filters.page ?? 1;
+      const limit = filters.limit ?? 20;
       const [reports, total] = await this.reportsRepository.findAndCount({
         where,
         order: {
           created_at: 'DESC',
         },
-        skip: (filters.page - 1) * filters.limit,
-        take: filters.limit,
+        skip: (page - 1) * limit,
+        take: limit,
       });
 
       // Sort by creation date (newest first)
@@ -173,9 +156,9 @@ export class ReportsService {
       return {
         reports: sortedReports,
         total,
-        page: filters.page,
-        limit: filters.limit,
-        totalPages: Math.ceil(total / filters.limit),
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       };
     } catch (error) {
       this.logger.error('Error getting reports:', error);
@@ -203,7 +186,7 @@ export class ReportsService {
         project_id: report.project_id,
         type: report.type,
         description: report.description,
-        photo_url: report.photo_url,
+        photo_url: report.photo_url || undefined,
         location: report.location,
         status: report.status,
         source: report.source,

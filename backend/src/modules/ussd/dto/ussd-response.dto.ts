@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class UssdResponseDto {
   @ApiProperty({
     description: 'USSD response text message',
     example: 'Por favor selecione uma opção:'
   })
-  @ApiProperty()
   @Type(() => String)
   readonly text: string;
 
@@ -13,15 +13,13 @@ export class UssdResponseDto {
     description: 'Whether to continue USSD session',
     example: true
   })
-  @ApiProperty()
   @Type(() => Boolean)
-  readonly continue: boolean = false;
+  readonly continue: boolean;
 
   @ApiProperty({
     description: 'New session ID for next interaction',
     example: 'abc123'
   })
-  @ApiProperty()
   @Type(() => String)
   readonly sessionId?: string;
 
@@ -29,7 +27,6 @@ export class UssdResponseDto {
     description: 'Current step in USSD menu',
     example: 'main'
   })
-  @ApiProperty()
   @Type(() => String)
-  readonly currentStep?: string = 'main';
+  readonly currentStep?: string;
 }

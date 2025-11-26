@@ -5,7 +5,7 @@ export class HashUtil {
    * Hash phone number using SHA256 for privacy
    */
   static hashPhone(phone: string): string {
-    if (!phone) return null;
+    if (!phone) return '';
 
     // Normalize phone number (remove spaces, dashes, etc.)
     const normalizedPhone = phone.replace(/[\s\-\(\)]/g, '');
@@ -17,7 +17,7 @@ export class HashUtil {
    * Hash IP address for rate limiting
    */
   static hashIp(ip: string): string {
-    if (!ip) return null;
+    if (!ip) return '';
 
     return crypto.createHash('sha256').update(ip).digest('hex');
   }

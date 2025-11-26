@@ -29,7 +29,12 @@ export class ProjectsService {
    * Get all projects with optional filters
    */
   async getProjects(filters: GetProjectsDto): Promise<ProjectsResponseDto> {
+    // Define pagination defaults outside try block to ensure availability in catch
+    const page = filters.page ?? 1;
+    const limit = filters.limit ?? 20;
+
     try {
+
       // Try to get from cache first
       let projects = await this.getCachedProjects();
       let fromCache = true;
@@ -51,20 +56,20 @@ export class ProjectsService {
       // Update report counts (would query from reports database)
       filteredProjects = await this.updateReportCounts(filteredProjects);
 
-      // Apply pagination
-      const startIndex = (filters.page - 1) * filters.limit;
-      const endIndex = startIndex + filters.limit;
+      // Apply pagination with defaults
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
       const paginatedProjects = filteredProjects.slice(startIndex, endIndex);
 
       // Sort results
-      const sortedProjects = this.sortProjects(paginatedProjects, filters.sortBy, filters.sortOrder);
+      const sortedProjects = this.sortProjects(paginatedProjects, filters.sortBy || 'created_at', filters.sortOrder || 'desc');
 
       return {
         projetos: sortedProjects,
         total: filteredProjects.length,
-        page: filters.page,
-        limit: filters.limit,
-        totalPages: Math.ceil(filteredProjects.length / filters.limit),
+        page,
+        limit,
+        totalPages: Math.ceil(filteredProjects.length / limit),
         fromCache,
         dataSource,
       };
@@ -72,16 +77,16 @@ export class ProjectsService {
       this.logger.error('Error getting projects:', error);
 
       // Fallback to mock data on any error
-      const mockProjects = await this.getMockProjectsWithReportCounts(filters);
+      const mockProjects = await this.getMockProjectsWithReportCounts(filters, page, limit);
 
       this.logger.warn('Using mock data due to API error');
 
       return {
         projetos: mockProjects.projetos,
         total: mockProjects.total,
-        page: filters.page,
-        limit: filters.limit,
-        totalPages: Math.ceil(mockProjects.total / filters.limit),
+        page,
+        limit,
+        totalPages: Math.ceil(mockProjects.total / limit),
         fromCache: false,
         dataSource: 'Dados Mock (Fallback)',
       };
@@ -157,7 +162,7 @@ export class ProjectsService {
         timestamp: new Date().toISOString(),
         costApiStatus,
         cachedProjects: cachedProjects?.length || 0,
-        cacheLastUpdated: this.getCacheLastUpdated(),
+        cacheLastUpdated: this.getCacheLastUpdated() || undefined,
       };
     } catch (error) {
       this.logger.error('Health check failed:', error);
@@ -167,7 +172,7 @@ export class ProjectsService {
         timestamp: new Date().toISOString(),
         costApiStatus: 'error',
         cachedProjects: 0,
-        cacheLastUpdated: null,
+        cacheLastUpdated: undefined,
       };
     }
   }
@@ -204,7 +209,7 @@ export class ProjectsService {
   /**
    * Fetch single project by ID from CoST API
    */
-  private async fetchProjectByIdFromAPI(id: string): Promise<SimplifiedProject | null> {
+  private async fetchProjectByIdFromAPI(id: string): Promise<SimplifiedProject | undefined> {
     try {
       this.logger.log(`Fetching project ${id} from CoST API...`);
 
@@ -217,13 +222,13 @@ export class ProjectsService {
       const costProject: CostProject = response.data;
 
       if (!DataTransformUtil.validateProject(costProject)) {
-        return null;
+        return undefined;
       }
 
       return DataTransformUtil.transformProject(costProject);
     } catch (error) {
       this.logger.error(`Failed to fetch project ${id} from CoST API:`, error.message);
-      return null;
+      return undefined;
     }
   }
 
@@ -303,21 +308,21 @@ export class ProjectsService {
     // Province filter
     if (filters.provincia) {
       filtered = filtered.filter(project =>
-        project.provincia.toLowerCase().includes(filters.provincia.toLowerCase())
+        project.provincia.toLowerCase().includes(filters.provincia!.toLowerCase())
       );
     }
 
     // Sector filter
     if (filters.setor) {
       filtered = filtered.filter(project =>
-        project.setor.toLowerCase().includes(filters.setor.toLowerCase())
+        project.setor.toLowerCase().includes(filters.setor!.toLowerCase())
       );
     }
 
     // Status filter
     if (filters.estado) {
       filtered = filtered.filter(project =>
-        project.estado.toLowerCase().includes(filters.estado.toLowerCase())
+        project.estado.toLowerCase().includes(filters.estado!.toLowerCase())
       );
     }
 
@@ -334,23 +339,23 @@ export class ProjectsService {
 
       switch (sortBy) {
         case 'nome':
-          aValue = a.nome.toLowerCase();
-          bValue = b.nome.toLowerCase();
+          aValue = (a.nome || '').toLowerCase();
+          bValue = (b.nome || '').toLowerCase();
           break;
         case 'valor':
           // Extract numeric value from formatted string
-          aValue = this.extractNumericValue(a.valor);
-          bValue = this.extractNumericValue(b.valor);
+          aValue = this.extractNumericValue(a.valor || '');
+          bValue = this.extractNumericValue(b.valor || '');
           break;
         case 'progresso':
-          aValue = a.progresso;
-          bValue = b.progresso;
+          aValue = a.progresso !== undefined ? a.progresso : 0;
+          bValue = b.progresso !== undefined ? b.progresso : 0;
           break;
         case 'created_at':
         default:
           // Since we don't have created_at in simplified project, use contract date
-          aValue = new Date(a.dataContrato).getTime() || 0;
-          bValue = new Date(b.dataContrato).getTime() || 0;
+          aValue = new Date(a.dataContrato || '').getTime() || 0;
+          bValue = new Date(b.dataContrato || '').getTime() || 0;
           break;
       }
 
@@ -366,6 +371,8 @@ export class ProjectsService {
    * Extract numeric value from formatted currency string
    */
   private extractNumericValue(formattedValue: string): number {
+    if (!formattedValue) return 0;
+
     const match = formattedValue.match(/[\d.]+/);
     if (!match) return 0;
 
@@ -405,25 +412,25 @@ export class ProjectsService {
   /**
    * Get mock projects with report counts (for fallback scenarios)
    */
-  private async getMockProjectsWithReportCounts(filters: GetProjectsDto): Promise<ProjectsResponseDto> {
+  private async getMockProjectsWithReportCounts(filters: GetProjectsDto, page: number = 1, limit: number = 20): Promise<ProjectsResponseDto> {
     const mockProjects = getMockProjects(filters);
     const transformedProjects = mockProjects.map(project => DataTransformUtil.transformProject(project));
     const projectsWithReports = await this.updateReportCounts(transformedProjects);
 
-    // Apply pagination
-    const startIndex = (filters.page - 1) * filters.limit;
-    const endIndex = startIndex + filters.limit;
+    // Apply pagination with defaults
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
     const paginatedProjects = projectsWithReports.slice(startIndex, endIndex);
 
     // Sort results
-    const sortedProjects = this.sortProjects(paginatedProjects, filters.sortBy, filters.sortOrder);
+    const sortedProjects = this.sortProjects(paginatedProjects, filters.sortBy || 'created_at', filters.sortOrder || 'desc');
 
     return {
       projetos: sortedProjects,
       total: projectsWithReports.length,
-      page: filters.page,
-      limit: filters.limit,
-      totalPages: Math.ceil(projectsWithReports.length / filters.limit),
+      page,
+      limit,
+      totalPages: Math.ceil(projectsWithReports.length / limit),
       fromCache: false,
       dataSource: 'Dados Mock (Fallback)',
     };

@@ -1,6 +1,7 @@
 import { Injectable, Logger, ConflictException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ProjectsService } from '../projects/projects.service';
+import { HashUtil } from '../../common/utils/hash.util';
 import { UssdRequestDto, UssdResponseDto } from './dto';
 
 export interface UssdSessionData {
@@ -10,14 +11,14 @@ export interface UssdSessionData {
     selectedProvince?: string;
     selectedSector?: string;
     filteredProjects?: any[];
-  currentPage?: number;
+    currentPage?: number;
     projectDetails?: any;
-  reportData?: {
+    reportData?: {
       type?: string;
       description?: string;
       projectId?: string;
     };
-  }
+  };
 }
 
 /**
@@ -27,11 +28,10 @@ export interface UssdSessionData {
 export class UssdService {
   private readonly logger = new Logger(UssdService.name);
   private readonly sessions = new Map<string, UssdSessionData>();
-  private readonly configService: ConfigService;
-  private readonly projectsService: ProjectsService;
 
   // In-memory session store (in production, this would be Redis/Database)
   private readonly sessionStore = new Map<string, {
+    sessionId: string;
     data: UssdSessionData;
     timestamp: number;
     expiresAt: number;
@@ -121,7 +121,7 @@ export class UssdService {
   /**
    * Generate session ID
    */
-  private generateSessionId(): string {
+  generateSessionId(): string {
     return Math.random().toString(36).substr(2, 9);
   }
 
@@ -176,7 +176,7 @@ export class UssdService {
   /**
    * Get USSD code from environment
    */
-  private getUssdCode(): string {
+  getUssdCode(): string {
     return this.configService.get('USSD_CODE', '*555#');
   }
 
@@ -184,7 +184,7 @@ export class UssdService {
    * Format menu options with numbers
    */
   private formatMenuOptions(options: string[]): string {
-    return options.map((option, index) => {
+    return options.map((option: string, index: number) => {
       const number = index + 1;
       const prefix = number < 10 ? '0' + (number - 9) : number.toString();
       return `${prefix}. ${option}`;
@@ -195,11 +195,15 @@ export class UssdService {
    * Main menu handler
    */
   async handleMainMenu(sessionId: string, phoneHash: string): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       // Get projects for user's region (mock data)
-      const projects = await this.projectsService.getProjects({
+      const projectsResponse = await this.projectsService.getProjects({
         limit: 10 // Limit for USSD display
       });
 
@@ -210,9 +214,10 @@ export class UssdService {
       this.updateSessionData(phoneHash, {
         step: 'main',
         data: {
-          filteredProjects: projects,
+          ...sessionData.data,
+          filteredProjects: projectsResponse.projetos, // Extract the actual projects array
         currentPage: 1,
-        totalPages: Math.ceil(projects.length / 10),
+        totalPages: Math.ceil(projectsResponse.projetos.length / 10),
         options,
         phoneHash,
         ussdCode: this.getUssdCode(),
@@ -234,14 +239,18 @@ export class UssdService {
    * Province selection handler
    */
   async handleProvinceSelection(sessionId: string, phoneHash: string, optionIndex: number): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       // Extract provinces from projects
       const projects = sessionData.data.filteredProjects || [];
       const provinces = [...new Set(projects.map((p: any) => p.provincia))];
 
-      const options = provinces.map((province, index) => {
+      const options = provinces.map((province: string, index: number) => {
         const number = index + 1;
         const prefix = number < 10 ? '0' + (number - 9) : number.toString();
         return `${prefix}. ${province}`;
@@ -276,7 +285,11 @@ export class UssdService {
    * Sector selection handler
    */
   async handleSectorSelection(sessionId: string, phoneHash: string, optionIndex: number): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       const projects = sessionData.data.filteredProjects || [];
@@ -290,7 +303,7 @@ export class UssdService {
       const provinceProjects = projects.filter((p: any) => p.provincia === selectedProvince);
       const sectors = [...new Set(provinceProjects.map((p: any) => p.setor))];
 
-      const options = sectors.map((sector, index) => {
+      const options = sectors.map((sector: string, index: number) => {
         const number = index + 1;
         const prefix = number < 10 ? '0' + (number - 9) : number.toString();
         return `${prefix}. ${sector}`;
@@ -327,7 +340,11 @@ export class UssdService {
    * Project listing handler
    */
   async handleProjectListing(sessionId: string, phoneHash: string, optionIndex: number): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       const projects = sessionData.data.filteredProjects || [];
@@ -343,11 +360,11 @@ export class UssdService {
       );
 
       // Paginate results (10 per page)
-      const startIndex = (sessionData.data.currentPage - 1) * 10;
+      const startIndex = ((sessionData.data.currentPage || 1) - 1) * 10;
       const endIndex = startIndex + 10;
       const paginatedProjects = sectorProjects.slice(startIndex, endIndex);
 
-      const options = paginatedProjects.map((project, index) => {
+      const options = paginatedProjects.map((project: any, index: number) => {
         const number = index + 1;
         const prefix = number < 10 ? '0' + (number - 9) : number.toString();
         const projectName = this.truncateText(project.nome, 30);
@@ -355,7 +372,7 @@ export class UssdService {
       });
 
       // Add back option if not first page
-      if (sessionData.data.currentPage > 1) {
+      if ((sessionData.data.currentPage || 1) > 1) {
         options.unshift('0. Voltar');
       }
 
@@ -368,7 +385,7 @@ export class UssdService {
           ...sessionData.data,
           selectedSector,
           paginatedProjects,
-          currentPage: sessionData.data.currentPage,
+          currentPage: sessionData.data.currentPage || 1,
           totalPages: Math.ceil(sectorProjects.length / 10),
           phoneHash,
           ussdCode: this.getUssdCode(),
@@ -390,7 +407,11 @@ export class UssdService {
    * Project details handler
    */
   async handleProjectDetails(sessionId: string, phoneHash: string, optionIndex: number): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       const projects = sessionData.data.filteredProjects || [];
@@ -455,7 +476,11 @@ export class UssdService {
    * Report creation handler
    */
   async handleReportCreation(sessionId: string, phoneHash: string, reportData: any): Promise<UssdResponseDto> {
-    const sessionData = this.sessionStore.get(phoneHash);
+    const sessionEntry = this.sessionStore.get(phoneHash);
+    if (!sessionEntry) {
+      throw new BadRequestException('Sessão USSD não encontrada');
+    }
+    const sessionData = sessionEntry.data;
 
     try {
       // In a real implementation, this would create a report in the database

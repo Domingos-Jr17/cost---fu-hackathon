@@ -92,11 +92,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'International Competitive Bidding',
     numberOfTenderers: 0,
     procurementCategory: 'works',
-    contractDate: null,
+    contractDate: '2022-11-01',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Ministério das Obras Públicas e Habitação' },
     procuringEntity: { name: 'Administração Nacional de Estradas' },
-    supplier: { name: null },
+    supplier: { name: 'Construtora não definida' },
     location: 'Caia, Sofala',
     province: 'Sofala',
     sector: 'Pontes'
@@ -149,11 +149,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'International Competitive Bidding',
     numberOfTenderers: 9,
     procurementCategory: 'works',
-    contractDate: null,
+    contractDate: '2023-02-15',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Ministério das Obras Públicas e Habitação' },
     procuringEntity: { name: 'Fundação de Apoio à Habitação' },
-    supplier: { name: null },
+    supplier: { name: 'Construtora não definida' },
     location: 'Nacala, Nampula',
     province: 'Nampula',
     sector: 'Habitação'
@@ -187,11 +187,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'International Competitive Bidding',
     numberOfTenderers: 0,
     procurementCategory: 'works',
-    contractDate: null,
+    contractDate: '2023-01-10',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Ministério dos Transportes e Comunicações' },
     procuringEntity: { name: 'Administração Nacional de Portos' },
-    supplier: { name: null },
+    supplier: { name: 'Construtora não definida' },
     location: 'Quelimane, Zambézia',
     province: 'Zambézia',
     sector: 'Transporte'
@@ -225,11 +225,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'International Competitive Bidding',
     numberOfTenderers: 11,
     procurementCategory: 'works',
-    contractDate: null,
+    contractDate: '2022-08-20',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Ministério da Educação e Desenvolvimento Humano' },
     procuringEntity: { name: 'Universidade Pedagógica' },
-    supplier: { name: null },
+    supplier: { name: 'Construtora não definida' },
     location: 'Lichinga, Niassa',
     province: 'Niassa',
     sector: 'Escolas'
@@ -244,11 +244,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'Limited International Bidding',
     numberOfTenderers: 0,
     procurementCategory: 'works',
-    contractDate: null,
+    contractDate: '2023-05-12',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Ministério dos Transportes e Comunicações' },
     procuringEntity: { name: 'Administração de Aeroportos de Moçambique' },
-    supplier: { name: null },
+    supplier: { name: 'Construtora não definida' },
     location: 'Chimoio, Manica',
     province: 'Manica',
     sector: 'Transporte'
@@ -263,11 +263,11 @@ export const mockProjects: CostProject[] = [
     procurementMethod: 'International Competitive Bidding',
     numberOfTenderers: 0,
     procurementCategory: 'goods',
-    contractDate: null,
+    contractDate: '2023-03-18',
     contractValue: { amount: 0, currency: 'MZN' },
     buyer: { name: 'Instituto Nacional das Comunicações de Moçambique' },
     procuringEntity: { name: 'Tmcel' },
-    supplier: { name: null },
+    supplier: { name: 'Fornecedor não definido' },
     location: 'Inhambane',
     province: 'Inhambane',
     sector: 'Telecomunicações'
@@ -306,14 +306,14 @@ export function getMockProjects(filters?: {
   // Apply province filter
   if (filters?.province) {
     filteredProjects = filteredProjects.filter(project =>
-      project.province.toLowerCase().includes(filters.province.toLowerCase())
+      project.province.toLowerCase().includes(filters.province!.toLowerCase())
     );
   }
 
   // Apply sector filter
   if (filters?.sector) {
     filteredProjects = filteredProjects.filter(project =>
-      project.sector.toLowerCase().includes(filters.sector.toLowerCase())
+      project.sector.toLowerCase().includes(filters.sector!.toLowerCase())
     );
   }
 

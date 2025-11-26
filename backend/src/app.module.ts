@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { UssdModule } from './modules/ussd/ussd.module';
+import { ReportEntity } from './modules/reports/entities/report.entity';
 
 @Module({
   imports: [
@@ -13,8 +14,15 @@ import { UssdModule } from './modules/ussd/ussd.module';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
-      entities: [ReportEntity], // Add ReportEntity here
-      database: 'your-database-connection', // This should be configured in database.config.ts
+      type: 'postgres',
+      host: process.env.DB_HOST ?? 'localhost',
+      port: parseInt(process.env.DB_PORT ?? '5432', 10),
+      username: process.env.DB_USERNAME ?? 'costant_user',
+      password: process.env.DB_PASSWORD ?? 'costant_password',
+      database: process.env.DB_DATABASE ?? 'costant_db',
+      entities: [ReportEntity],
+      synchronize: process.env.NODE_ENV === 'development', // Only true in development
+      logging: process.env.NODE_ENV === 'development',
     }),
     ProjectsModule,
     ReportsModule,

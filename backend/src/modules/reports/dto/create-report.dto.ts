@@ -1,6 +1,6 @@
-import { IsString, IsOptional, Max, IsIn } from 'class-validator';
+import { IsString, IsOptional, Max, IsIn, IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 
 export class CreateReportDto {
   @ApiPropertyOptional({
@@ -41,15 +41,22 @@ export class CreateReportDto {
 
   @ApiPropertyOptional({
     description: 'Location coordinates (lat, lng, and address)',
+    type: Object,
     example: '{"lat": -25.9685, "lng": 32.5865, "address": "Estrada Nacional EN1, Maputo"}'
+  })
+  @ValidateNested()
+  @Type(() => LocationDto)
+  @IsOptional()
+  readonly location?: LocationDto;
+
+  @ApiPropertyOptional({
+    description: 'Phone number of reporter (for followup)',
+    example: '841234567'
   })
   @IsString()
   @IsOptional()
-  readonly location?: {
-    lat: number;
-    lng: number;
-    address: string;
-  };
+  @Max(20)
+  readonly phone?: string;
 
   @ApiPropertyOptional({
     description: 'Report source (PWA or USSD)',
@@ -60,4 +67,18 @@ export class CreateReportDto {
   @IsOptional()
   @Max(10)
   readonly source: string = 'pwa';
+}
+
+export class LocationDto {
+  @ApiProperty({ example: -25.9685 })
+  @IsNumber()
+  readonly lat: number;
+
+  @ApiProperty({ example: 32.5865 })
+  @IsNumber()
+  readonly lng: number;
+
+  @ApiProperty({ example: 'Estrada Nacional EN1, Maputo' })
+  @IsString()
+  readonly address: string;
 }

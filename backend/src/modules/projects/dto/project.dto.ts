@@ -172,7 +172,8 @@ export class HealthResponseDto {
 
   @ApiProperty({
     description: 'Cache last updated',
-    example: '2024-01-15T09:15:00Z'
+    example: '2024-01-15T09:15:00Z',
+    required: false
   })
-  cacheLastUpdated: string;
+  cacheLastUpdated?: string;
 }

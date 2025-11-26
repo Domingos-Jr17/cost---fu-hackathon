@@ -1,5 +1,6 @@
-import { Controller, Post, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { HashUtil } from '../../common/utils/hash.util';
 
 import { UssdService } from './ussd.service';
 import { UssdRequestDto, UssdResponseDto } from './dto';
@@ -10,6 +11,8 @@ import { UssdRequestDto, UssdResponseDto } from './dto';
 @ApiTags('ussd')
 @Controller('ussd')
 export class UssdController {
+  private readonly logger = console; // In real app, use Logger from NestJS
+
   constructor(private readonly ussdService: UssdService) {}
 
   @Post('incoming')
@@ -29,9 +32,9 @@ export class UssdController {
     try {
       // In real implementation, this would extract from telecom gateway
       const phoneNumber = request.phoneNumber || '';
-      const phoneHash = phoneNumber ? HashUtil.hashPhone(phoneNumber) : null;
+      const phoneHash = phoneNumber ? HashUtil.hashPhone(phoneNumber) : '';
 
-      return await this.ussdService.processRequest(request, phoneHash);
+      return await this.ussdService.processUssdRequest(request, phoneHash);
     } catch (error) {
       this.logger.error('Error processing USSD request:', error);
 

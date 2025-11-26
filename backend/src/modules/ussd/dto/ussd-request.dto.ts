@@ -28,4 +28,13 @@ export class UssdRequestDto {
   @IsOptional()
   @Max(160)
   readonly text?: string;
+
+  @ApiProperty({
+    description: 'Session ID for USSD continuation',
+    example: 'abc123def456'
+  })
+  @IsString()
+  @IsOptional()
+  @Max(64)
+  readonly sessionId?: string;
 }
