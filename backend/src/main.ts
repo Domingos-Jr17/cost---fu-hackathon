@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
-import * as compression from 'compression';
+import compression from 'compression';
 import * as cors from 'cors';
 
 import { AppModule } from './app.module';
@@ -12,29 +12,37 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Security middleware
+  // Security
   app.use(helmet());
   app.use(compression());
-  app.use(cors({
-    origin: configService.get('FRONTEND_URL', 'http://localhost:3000'),
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: configService.get('FRONTEND_URL', 'http://localhost:3000'),
+      credentials: true,
+    }),
+  );
 
-  // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
+  // Validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
-  // API prefix
+  // Global prefix
   app.setGlobalPrefix('api');
 
-  // Swagger documentation
-  if (configService.get('NODE_ENV') !== 'production') {
+  // Swagger
+  const isProd = configService.get('NODE_ENV') === 'production';
+
+  if (!isProd) {
     const config = new DocumentBuilder()
       .setTitle('Costant API')
-      .setDescription('API para Plataforma de Transparência de Infraestrutura de Moçambique')
+      .setDescription(
+        'API para Plataforma de Transparência de Infraestrutura de Moçambique',
+      )
       .setVersion('1.0')
       .addTag('projects')
       .addTag('reports')
@@ -43,13 +51,20 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);
+
+    console.log('📘 Swagger is enabled: /api/docs');
+  } else {
+    console.log('📕 Swagger disabled in production mode');
   }
 
-  const port = configService.get('PORT', 3001);
-  await app.listen(port);
+  // Start server
+  const port = configService.get('PORT') || 3005;
+  const host = configService.get('HOST', '0.0.0.0');
 
-  console.log(`🚀 Costant API running on port ${port}`);
-  console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
+  await app.listen(port, host);
+
+  console.log(`🚀 Costant API running at http://${host}:${port}`);
+  console.log(`📡 Environment: ${configService.get('NODE_ENV')}`);
 }
 
 bootstrap();
