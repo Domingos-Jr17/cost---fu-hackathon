@@ -53,9 +53,12 @@ export class UssdController {
   @ApiResponse({
     status: 200,
     description: 'USSD simulator interface loaded successfully',
-    type: {
-      sessionId: string;
-      initialMessage: string;
+    schema: {
+      type: 'object',
+      properties: {
+        sessionId: { type: 'string' },
+        initialMessage: { type: 'string' }
+      }
     },
   })
   async getSimulator(): Promise<{
