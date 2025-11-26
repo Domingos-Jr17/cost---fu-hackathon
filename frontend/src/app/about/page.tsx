@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import Link from 'next/link';
+import { MapPin, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function AboutPage() {
   const [project, setProject] = useState<any>(null);
@@ -82,8 +85,8 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">{nome}</h1>
-          <p className="text-xl text-white mb-6">Projeto de Infraestrutura em Moçambique</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{nome}</h1>
+          <p className="text-xl text-gray-600 mb-6">Projeto de Infraestrutura em Moçambique</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -149,14 +152,15 @@ export default function AboutPage() {
                   <CardTitle>Progresso</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="w-full bg-gray-200 rounded-full h-4">
-                    <div
-                      className="h-full bg-blue-600 rounded-full"
-                      style={{ width: `${progresso}%` }}
-                    ></div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-full bg-gray-200 rounded-full h-4">
+                      <div
+                        className="h-full bg-blue-600 rounded-full"
+                        style={{ width: `${progresso}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900 ml-2">{progresso}%</span>
                   </div>
-                  <span className="text-lg font-semibold text-gray-900 ml-2">{progresso}%</span>
-                </div>
                 </CardContent>
               </Card>
 
@@ -167,12 +171,12 @@ export default function AboutPage() {
                 <CardContent>
                   <div className="flex items-center space-x-2 mb-2">
                     <span className="text-2xl font-bold text-gray-900">{relatos}</span>
-                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 space-y-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Data do Contrato</CardTitle>
@@ -211,23 +215,23 @@ export default function AboutPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row sm:space-y-4 space-x-4 mt-6">
-              <Link href={`/projects/${project?.id}/reports/new`}>
+            <div className="flex flex-col sm:flex-row sm:space-y-0 space-y-4 space-x-4 mt-6">
+              <Link href={`/projects/${project?.id}/reports/new`} className="flex-1">
                 <Button className="w-full">
                   <AlertCircle className="w-4 h-4 mr-2" />
                   Fazer um Relato
                 </Button>
               </Link>
 
-              <Link href="/projects">
+              <Link href="/projects" className="flex-1">
                 <Button variant="outline" className="w-full">
                   <MapPin className="w-4 h-4 mr-2" />
                   Voltar para Lista
                 </Button>
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

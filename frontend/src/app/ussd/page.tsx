@@ -186,6 +186,7 @@ export default function UssdSimulatorPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
 
         {/* Navigation */}
         <div className="flex justify-center">
@@ -194,7 +195,8 @@ export default function UssdSimulatorPage() {
               <MapPin className="w-4 h-4 mr-2" />
               Ver Projetos
             </Button>
-          </div>
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -78,6 +78,22 @@ export default function ProjectDetailsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="max-w-4xl mx-auto">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Projeto não encontrado</h2>
+            <p className="text-gray-600 mb-6">O projeto que você está procurando não existe ou foi removido.</p>
+            <Link href="/projects">
+              <Button>Voltar para Lista</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <Card>
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-6">
               <Badge className={project.estado === 'Concluído' ? 'badge-success' : project.estado === 'Em Andamento' ? 'badge-warning' : 'badge-secondary'}>
@@ -222,6 +238,7 @@ export default function ProjectDetailsPage() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

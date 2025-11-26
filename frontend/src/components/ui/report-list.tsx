@@ -3,130 +3,56 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { MapPin, AlertCircle, Eye, EyeOff } from 'lucide-react';
-
-interface ReportListProps {
-  projectId: string;
-  projectIdParam?: string;
-}
+import { Link } from 'next/navigation';
+import { MapPin, AlertCircle, Users, TrendingUp, EyeOff } from 'lucide-react';
 
 interface Report {
   id: string;
-  type: string;
+  title: string;
   description: string;
-  status: string;
+  type: 'qualidade' | 'corrupcao' | 'atraso' | 'outro';
   score: number;
+  status: 'pendente' | 'verificado' | 'resolvido';
+  location: string;
   created_at: string;
-  project_id: string;
 }
 
-// Mock report data
-const mockReports: Report[] = [
-  {
-    id: 'report-1',
-    type: 'qualidade',
-    description: 'Buraco no pavimento que causa risco aos veículos',
-    status: 'pendente',
-    score: 5,
-    created_at: '2024-01-15T10:30:00Z',
-    project_id: 'mock-001',
-  },
-  {
-    id: 'report-2',
-    type: 'corrupcao',
-    description: 'Suspeita de desvio de materiais sem devida comprovação',
-    status: 'pendente',
-    score: 8,
-    created_at: '2024-01-14T14:15:00Z',
-    project_id: 'mock-001',
-  },
-];
+interface ReportListProps {
+  projectId?: string;
+  reports: Report[];
+}
 
-export default function ReportList({ projectId, projectIdParam }: ReportListProps) {
-  const [reports, setReports] = useState<Report[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [page, setPage] = useState(1);
+export default function ReportList({ projectId, reports }: ReportListProps) {
   const [statusFilter, setStatusFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const [scoreFilter, setScoreFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Use projectId from URL params if not provided
-  const currentProjectId = projectIdParam || projectId;
+  const filteredReports = reports.filter((report) => {
+    const matchesStatus = !statusFilter || report.status === statusFilter;
+    const matchesType = !typeFilter || report.type === typeFilter;
+    const matchesScore = !scoreFilter || report.score.toString() === scoreFilter;
+    const matchesSearch = !searchTerm ||
+      report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.location.toLowerCase().includes(searchTerm.toLowerCase());
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      setIsLoading(true);
-      setError('');
-
-      try {
-        // Build query parameters
-        const params = new URLSearchParams();
-        if (currentProjectId) {
-          params.set('project_id', currentProjectId);
-        }
-        if (page) {
-          params.set('page', page.toString());
-        }
-        if (statusFilter) {
-          params.set('status', statusFilter);
-        }
-        if (typeFilter) {
-          params.set('type', typeFilter);
-        }
-
-        // Fetch reports from API
-        const response = await fetch(`/api/reports?${params.toString()}`, {
-          method: 'GET',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setReports(data.reports || []);
-        } else {
-          // Fallback to mock data
-          const filteredMockReports = mockReports.filter(report =>
-            report.project_id === currentProjectId
-          );
-
-          setReports(filteredMockReports);
-        }
-      } catch (err: any) {
-        console.error('Error fetching reports:', err);
-        setError('Falha ao carregar relatos. Tente novamente.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchReports();
-  }, [currentProjectId, projectIdParam, page, statusFilter, typeFilter]);
+    return matchesStatus && matchesType && matchesScore && matchesSearch;
+  });
 
   const getReportTypeColor = (type: string): string => {
-    const colorMap: { [key: string]: string } = {
-      'qualidade': 'badge-warning',
-      'corrupcao': 'badge-danger',
-      'atraso': 'badge-secondary',
-      'outro': 'badge-default',
-    };
-
-    return colorMap[type] || 'badge-default';
-  };
-
-  const getStatusColor = (status: string): string => {
-    const colorMap: { [key: string]: string } = {
-      'pendente': 'badge-secondary',
-      'verificado': 'badge-success',
-      'resolvido': 'badge-success',
-      'spam': 'badge-danger',
-    };
-
-    return colorMap[status] || 'badge-secondary';
-  };
-
-  const getScoreWidth = (score: number): number => {
-    // Width based on score (max 10)
-    return Math.min(score * 10, 100);
+    switch (type) {
+      case 'qualidade':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'corrupcao':
+        return 'bg-red-100 text-red-800';
+      case 'atraso':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
@@ -141,7 +67,6 @@ export default function ReportList({ projectId, projectIdParam }: ReportListProp
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
@@ -157,7 +82,6 @@ export default function ReportList({ projectId, projectIdParam }: ReportListProp
                   <option value="pendente">Pendente</option>
                   <option value="verificado">Verificado</option>
                   <option value="resolvido">Resolvido</option>
-                  <option value="spam">Spam</option>
                 </select>
               </div>
 
@@ -178,38 +102,62 @@ export default function ReportList({ projectId, projectIdParam }: ReportListProp
                   <option value="outro">Outro</option>
                 </select>
               </div>
+
+              <div>
+                <label htmlFor="score" className="block text-sm font-medium text-gray-700 mb-1">
+                  Filtrar por Score
+                </label>
+                <select
+                  id="score"
+                  value={scoreFilter}
+                  onChange={(e) => setScoreFilter(e.target.value)}
+                  className="w-full p-2 border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                >
+                  <option value="">Todos os Scores</option>
+                  <option value="1">Score 1</option>
+                  <option value="2">Score 2</option>
+                  <option value="3">Score 3</option>
+                  <option value="4">Score 4</option>
+                  <option value="5">Score 5</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+                  Pesquisar
+                </label>
+                <Input
+                  id="search"
+                  type="text"
+                  placeholder="Pesquisar relatos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
+                />
+              </div>
             </div>
 
-            {/* Reports List */}
-            {isLoading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 border-t-transparent"></div>
-              </div>
-            ) : reports.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+            {filteredReports.length === 0 ? (
+              <div className="text-center py-12">
                 <MapPin className="w-12 h-12 mx-auto mb-4" />
                 <p className="text-lg font-medium">Nenhum relato encontrado</p>
                 <p className="text-sm text-gray-600">
-                  {currentProjectId
-                    ? 'para este projeto.'
-                    : 'para nenhum projeto.'}
+                  {projectId ? 'para este projeto.' : 'para nenhum projeto.'}
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
-                {reports.map((report) => (
-                  <div key={report.id} className="bg-white p-4 rounded-lg border border-gray-200">
+                {filteredReports.map((report) => (
+                  <Card key={report.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center space-x-3">
-                        <div
-                          className={`w-2 h-2 rounded-full p-1 text-xs font-medium ${getReportTypeColor(report.type)}`}
-                        >
-                          {report.type === 'qualidade' && '⚠️'}
-                          {report.type === 'corrupcao' && '🚨'}
-                          {report.type === 'atraso' && '⏰'}
-                          {report.type === 'outro' && '📝'}
-                        </div>
-                        <span className="ml-2 text-xs text-gray-500">
+                        <Badge className={getReportTypeColor(report.type)}>
+                          {report.type === 'qualidade' && '⚠️ Qualidade'}
+                          {report.type === 'corrupcao' && '🚨 Corrupção'}
+                          {report.type === 'atraso' && '⏰ Atraso'}
+                          {report.type === 'outro' && '📝 Outro'}
+                        </Badge>
+                        <span className="text-xs text-gray-500 ml-2">
                           {new Date(report.created_at).toLocaleDateString('pt-MZ', {
                             day: '2-digit',
                             month: '2-digit',
@@ -217,51 +165,29 @@ export default function ReportList({ projectId, projectIdParam }: ReportListProp
                           })}
                         </span>
                       </div>
+                      <Badge variant="outline">{report.status}</Badge>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs text-gray-500">
-                          Score: {report.score}
-                        </span>
-                        <div
-                          className="w-16 h-2 bg-gray-200 rounded-sm">
-                            <div
-                              className="h-full bg-gray-300 rounded-full"
-                              style={{ width: `${getScoreWidth(report.score)}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500">
-                          {report.status}
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="p-1"
-                        >
-                          <EyeOff className="w-4 h-4" />
-                        </Button>
-                      </div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      <strong>Localização:</strong> {report.location}
                     </div>
-                  </div>
 
-                  <CardDescription className="text-sm text-gray-600 mt-2">
-                    {report.description}
-                  </CardDescription>
-                </div>
-              ))}
+                    <div className="text-sm text-gray-600 mb-2">
+                      <strong>Score:</strong> {report.score}/5
+                    </div>
+
+                    <CardDescription className="text-sm text-gray-700">
+                      {report.description}
+                    </CardDescription>
+                  </Card>
+                ))}
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* New Report Button */}
         <div className="mt-6 text-center">
-          <Link href={`/reports/new?projectId=${currentProjectId}`}>
+          <Link href={`/reports/new?projectId=${projectId}`}>
             <Button variant="outline">
               <AlertCircle className="w-4 h-4 mr-2" />
               Fazer um Novo Relato
