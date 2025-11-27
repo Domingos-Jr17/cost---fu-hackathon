@@ -14,15 +14,12 @@ import { PrismaService } from './config/prisma.service';
       envFilePath: '.env',
     }),
 
-    // Serviço Prisma global
-    PrismaService,
-
     // Módulos da aplicação
     ProjectsModule,
     ReportsModule,
     UssdModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}

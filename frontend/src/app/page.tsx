@@ -106,13 +106,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">C</span>
-              </div>
-              <h1 className="text-xl font-bold text-gray-900">Costant</h1>
+              <img
+                src="/logo-removebg-preview.png"
+                alt="Costant Logo"
+                className="w-32 h-16 object-contain"
+              />
+        
             </div>
 
             <div className="flex items-center space-x-4">
