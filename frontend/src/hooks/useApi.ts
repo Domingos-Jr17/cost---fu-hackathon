@@ -24,6 +24,13 @@ export function useApiCall<T>(apiFunction: () => Promise<T>, dependencies: any[]
     } catch (err) {
       console.error('API call error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
+
+      // Fallback to mock data for projects API
+      if (apiFunction.toString().includes('getProjects')) {
+        console.warn('Falling back to mock data for projects');
+        const mockProjects = getMockProjects();
+        setData(mockProjects as any);
+      }
     } finally {
       setLoading(false);
     }

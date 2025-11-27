@@ -348,10 +348,16 @@ export default function HomePage() {
               sobre problemas que encontrar.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/reports/new">
+              <Link href="/ussd">
                 <Button size="lg" variant="secondary" className="w-full sm:w-auto">
-                  <AlertCircle className="w-5 h-5 mr-2" />
-                  Fazer um Relato
+                  <Phone className="w-5 h-5 mr-2" />
+                  Simulador USSD
+                </Button>
+              </Link>
+              <Link href="/ussd-simple">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-blue-600">
+                  <Phone className="w-5 h-5 mr-2" />
+                  USSD Rápido
                 </Button>
               </Link>
               <Link href="/about">

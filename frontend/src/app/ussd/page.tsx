@@ -294,7 +294,10 @@ export default function UssdSimulatorPage() {
                               >
                                 <div className="flex items-center gap-2 mb-1">
                                   <span className="text-xs text-gray-500">
-                                    [{log.timestamp}]
+                                    [{log.timestamp.toLocaleTimeString('pt-MZ', {
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}]
                                   </span>
                                   <Badge
                                     variant="outline"

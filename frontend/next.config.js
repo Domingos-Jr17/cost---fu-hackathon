@@ -3,7 +3,7 @@ const nextConfig = {
   // Environment variables
   env: {
     NEXT_PUBLIC_API_URL:
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3005/api",
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || "Costant",
     NEXT_PUBLIC_APP_DESCRIPTION:
       process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
@@ -62,7 +62,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/api/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3005/api"}/api/:path*`,
       },
     ];
   },
