@@ -69,16 +69,15 @@ const nextConfig = {
 };
 
 // Only add PWA configuration if next-pwa is installed and enabled
-if (process.env.NEXT_PUBLIC_PWA_ENABLED !== 'false' && process.env.NODE_ENV !== 'development') {
-  // Use PWA plugin only in production
+if (process.env.NEXT_PUBLIC_PWA_ENABLED !== 'false') {
   const withPWA = require('next-pwa')({
     dest: 'public',
+    disable: process.env.NODE_ENV === 'development', // Disable PWA in development to avoid conflicts
     register: true,
     skipWaiting: true,
   });
 
   module.exports = withPWA(nextConfig);
 } else {
-  // Don't use PWA plugin in development to avoid Babel conflicts
   module.exports = nextConfig;
 }

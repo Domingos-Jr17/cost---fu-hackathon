@@ -8,7 +8,7 @@ export class UssdRequestDto {
   })
   @IsString()
   @IsOptional()
-  @Max(20)
+  @Max(64)
   readonly currentStep?: string = 'main';
 
   @ApiProperty({
@@ -26,7 +26,7 @@ export class UssdRequestDto {
   })
   @IsString()
   @IsOptional()
-  @Max(160)
+  @Max(64)
   readonly text?: string;
 
   @ApiProperty({
