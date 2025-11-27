@@ -1,6 +1,6 @@
 // API service for Costant frontend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005/api';
 
 interface ApiConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';

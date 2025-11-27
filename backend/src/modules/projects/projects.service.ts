@@ -190,7 +190,16 @@ export class ProjectsService {
         })
       );
 
-      const costProjects: CostProject[] = response.data || [];
+      // Handle different response formats
+      let costProjects: CostProject[] = [];
+
+      if (response.data && Array.isArray(response.data)) {
+        // Direct array response
+        costProjects = response.data;
+      } else if (response.data && response.data.projects && Array.isArray(response.data.projects)) {
+        // Object with projects array (CoST API format)
+        costProjects = response.data.projects;
+      }
 
       // Transform and validate projects
       const validProjects = costProjects
