@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus, BadRequestException, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HashUtil } from '../../common/utils/hash.util';
 
@@ -27,16 +27,21 @@ export class UssdController {
   })
   async incoming(
     @Body() request: UssdRequestDto,
-    ipHash: string,
+    @Request() req: any,
   ): Promise<UssdResponseDto> {
     try {
+      // Get IP address from request and hash it
+      const ip = req.ip || req.connection.remoteAddress || req.socket.remoteAddress ||
+                 (req.connection as any).remoteAddress;
+      const ipHash = ip ? HashUtil.hashIp(ip) : 'unknown_ip';
+
       // In real implementation, this would extract from telecom gateway
       let phoneHash: string | null = null;
       if (request.phoneNumber && typeof request.phoneNumber === 'string') {
         phoneHash = HashUtil.hashPhone(request.phoneNumber);
       }
 
-      return await this.ussdService.processUssdRequest(request, phoneHash);
+      return await this.ussdService.processUssdRequest(request, ipHash);
     } catch (error) {
       this.logger.error('Error processing USSD request:', error);
 
