@@ -14,18 +14,19 @@ export class DatabaseConfig {
   }
 
   get username(): string {
-    return this.configService.get<string>('DB_USERNAME', 'costant_user');
+    return this.configService.get<string>('DB_USERNAME', 'postgres');
   }
 
   get password(): string {
-    return this.configService.get<string>('DB_PASSWORD', 'costant_password');
+    return this.configService.get<string>('DB_PASSWORD', 'zpHp63JVnggD5Z1w');
   }
 
   get database(): string {
-    return this.configService.get<string>('DB_DATABASE', 'costant_db');
+    return this.configService.get<string>('DB_DATABASE', 'postgres');
   }
 
-  get connectionString(): string {
-    return `postgresql://${this.username}:${this.password}@${this.host}:${this.port}/${this.database}`;
+  // For Supabase connection with pooling (recommended)
+  get supabaseUrl(): string {
+    return this.configService.get<string>('DATABASE_URL') || 'postgresql://localhost:5432/postgres' || 'postgresql://localhost:5432/postgres';
   }
 }

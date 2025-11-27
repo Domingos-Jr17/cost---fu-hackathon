@@ -337,8 +337,8 @@ async function removeOfflineReport(reportId) {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data.text(),
-    icon: '/icons/icon-192.png',
-    badge: '/icons/badge-72.png',
+    icon: '/logo.png',
+    badge: '/logo.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),

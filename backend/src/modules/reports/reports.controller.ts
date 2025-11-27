@@ -2,7 +2,7 @@ import { Controller, Get, Post, Param, HttpCode, HttpStatus, Query, Headers, Bod
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { HashUtil } from '../../common/utils/hash.util';
 
-import { ReportsService } from './reports.service';
+import { ReportsService } from './reports.service.prisma';
 import { CreateReportDto, ReportResponseDto, GetReportsDto, ReportsResponseDto } from './dto';
 
 /**

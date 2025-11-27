@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -13,16 +13,11 @@ export const metadata: Metadata = {
   keywords: ['Moçambique', 'infraestrutura', 'transparência', 'governo', 'projetos', 'cidadão'],
   authors: [{ name: 'Costant Team' }],
   manifest: '/manifest.json',
-  themeColor: '#0066CC',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  themeColor: '#0066CC', // themeColor can stay in metadata
   icons: {
-    icon: [
-      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-    ],
+    icon: '/logo-cost.ico',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
   appleWebApp: {
     capable: true,
@@ -42,6 +37,14 @@ export const metadata: Metadata = {
     title: 'Costant - Transparência de Infraestrutura',
     description: 'A Ponte entre os Dados da Infraestrutura e Todos os Cidadãos',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#0066CC',
 };
 
 export default function RootLayout({

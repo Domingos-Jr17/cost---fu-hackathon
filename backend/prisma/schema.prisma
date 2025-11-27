@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/docs/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  project_id   String
+  phone_hash   String?  @db.Text
+  ip_hash      String?  @db.Text
+  type         String
+  description  String
+  photo_url    String?  @db.Text
+  location      Json?
+  status       String
+  source       String
+  score        Int      @default(0)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@map("reports")
+  @@index([project_id])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description  String?
+  province    String?
+  sector       String?
+  status       String?
+  progress     Int?
+  value        Float?
+  currency     String?
+  start_date   DateTime?
+  end_date     DateTime?
+  contract_date DateTime?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@map("projects")
+  @@index([name])
+  @@index([province])
+  @@index([sector])
+  @@index([status])
+}
