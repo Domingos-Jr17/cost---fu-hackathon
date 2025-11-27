@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Header from '@/components/navigation/header';
+import Footer from '@/components/navigation/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -66,10 +68,14 @@ export default function RootLayout({
       <body className={`${inter.className} h-full bg-background text-foreground antialiased`}>
         {/* Main App Container */}
         <div className="min-h-screen flex flex-col">
+          <Header />
+
           {/* App Content */}
           <main className="flex-1">
             {children}
           </main>
+
+          <Footer />
 
           {/* Offline Indicator (will be shown when offline) */}
           <div id="offline-indicator" className="hidden fixed top-0 left-0 right-0 bg-orange-500 text-white text-center py-2 z-50">

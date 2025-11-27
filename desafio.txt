@@ -1,0 +1,407 @@
+HACKATRANSPARENCY MOÇAMBIQUE 2025 
+Tema: Participação Cidadã como Pilar do Desenvolvimento de Infraestruturas: Como 
+Transformar Dados em Impacto 
+1. Introdução e Contexto 
+O HackaTransparency Moçambique 2025 é uma iniciativa da CoST Moçambique que visa 
+fortalecer a participação cidadã na gestão de infraestruturas públicas, colocando os cidadãos no 
+centro do processo de transparência e responsabilização. 
+A plataforma CoST Moçambique fornece dados detalhados sobre projectos de infraestrutura, 
+incluindo informações sobre contratação, execução, prazos, custos e beneficiários. Estes dados 
+são uma base valiosa para análise, monitorização e criação de soluções que aumentem a 
+transparência e promovam o envolvimento social. 
+2. Objectivos 
+2.1. Objectivo Geral 
+O hackathon visa capacitar os participantes para transformar estes dados existentes em soluções 
+tecnológicas, educacionais, sociais e de aprendizagem, permitindo que cidadãos, organizações e 
+gestores públicos compreendam, monitorizem e influenciem a gestão de infraestruturas. 
+2.2. Objectivos especificos 
+● Formar participantes no uso da plataforma CoST; 
+● Desenvolver protótipos de ferramentas de monitorização cidadã, dashboards interactivos 
+e aplicações educacionais; 
+● Incentivar a colaboração multidisciplinar entre técnicos, jornalistas, académicos e 
+sociedade civil; 
+● Selecionar soluções com maior potencial de implementação e escalabilidade. 
+3. Justificação 
+Embora a plataforma CoST forneça dados valiosos, a participação cidadã na gestão de 
+infraestruturas ainda é limitada em Moçambique. 
+O verdadeiro valor destes dados só será concretizado se cidadãos, organizações e gestores 
+públicos puderem usá-los para monitorizar, fiscalizar e propor melhorias. 
+Um hackathon permite: 
+● Transformar dados públicos existentes em soluções práticas para monitorização e 
+envolvimento social; 
+● Formar jovens, profissionais e organizações na leitura e interpretação de informação 
+pública; 
+● Criar ferramentas que aumentem a visibilidade dos projectos e incentivem o debate sobre 
+qualidade, eficiência e impacto social. 
+4. Público-alvo e Participantes 
+4.1 Público-alvo 
+● Estudantes universitários (TI, Engenharia, Jornalismo, Design, Estatística); 
+● Profissionais de TI, programadores e designers de soluções digitais; 
+● Jornalistas de dados e investigadores; 
+● Gestores públicos e técnicos de infraestruturas. 
+4.2 Número de Participantes 
+Um máximo de 40 participantes, distribuídos por 10 equipas de até 4 pessoas cada. 
+4.3 Critérios de Seleção 
+● Áreas de ciências; 
+● Idade entre 19 e 35 anos; 
+5. Metodologia e Estrutura do Evento  
+5.1 Pré-Evento 
+● Promoção em universidades, nas redes sociais e através de organizações parceiras; 
+● Workshops de formação sobre o uso da plataforma CoST, aplicações e interpretação de 
+dados; 
+● Seleção final dos participantes com base no perfil, motivação e experiência; 
+● Preparação logística do local, internet, materiais e kits de participação. 
+5.2 Durante o Evento (3 dias) 
+Dia 1 – Terça-feira  (25 de Novembro de 2025) 
+● Sessão de abertura: apresentação do hackathon, desafios e objectivos; 
+● Formação de equipas e definição dos projectos a serem desenvolvidos; 
+● Início do desenvolvimento de protótipos com apoio de mentores; 
+● Checkpoint final do dia para avaliar o progresso e ajustar a estratégia. 
+Dia 2 – Quarta-feira (26 de Novembro de 2025) 
+● Continuação do desenvolvimento de protótipos; 
+● Sessões de apresentação pelos competidores e ajustes finais aos protótipos; 
+Dia 3 – Quinta-feira (27 de Novembro de 2025) 
+● Apresentações finais ao júri e avaliação das soluções; 
+● Cerimónia de anúncio dos vencedores, atribuição de prémios e encerramento. 
+6. Critérios de Desenvolvimento de Projectos 
+6.1 Desafios e Temas 
+Os participantes serão desafiados a propor soluções que promovam a participação cidadã e o 
+envolvimento social, usando dados já disponíveis na plataforma CoST, incluindo: 
+1. Tradutor de Responsabilização 
+Problema: Os cidadãos não conseguem interpretar anomalias de contratação, desvios 
+orçamentais ou atrasos em cronogramas nos dados brutos OC4IDS. 
+Desafio: Construir ferramentas que detectem sinais de alerta nos dados de projectos e os 
+expliquem em linguagem simples. 
+Entregáveis (escolha um): 
+● Sistema de Alertas de Atrasos & Custos: Identificar projectos com orçamento com desvio 
+acima de 20% ou mais de 6 meses de atraso. Gerar notificações em linguagem de fácil percepção 
+do cidadão: "As obras da Estrada ao longo da costa na Beira estão 8 meses atrasadas e 2,5 
+milhões de  meticais acima do orçamento inicial. Última actualização de status: [data]." 
+● Painel de Integridade de Contratação: Sinalizar contratos de do mesmo concorrente 
+documentos de licitação ausentes ou concentração de empreiteiros. Resultado: "5 estradas em 
+Nampula foram adjudicadas ao mesmo empreiteiro sem licitação competitiva." 
+● Tabela de Divulgação de Documentos: Classificar a transparência do projecto pela 
+disponibilidade de documentos (contratos, estudos de viabilidade, relatórios de conclusão). 
+Mostrar: "Projeto X: 3/10 documentos críticos publicados." 
+Por que funciona: Transforma campos complexos do OC4IDS (contractPeriod, budget.amount, 
+tender.procurementMethod) em sugestões mais simples  participantes decidem quais anomalias 
+são mais importantes e como comunicá-las.  
+Diferencial na avaliação: "Funcionários não técnicos entenderam seu alerta? Um jornalista 
+poderia usar isso para escrever uma reportagem?" 
+2. Calculadora de Impacto Comunitário 
+Problema: Os cidadãos não conseguem identificar quais projectos de infraestrutura os afectam 
+ou estimar o benefício pessoal. 
+Desafio: Tornar dados abstractos de projectos localmente relevantes e medir o seu impacto.  
+Entregáveis (escolha um): 
+● Mapeador de Proximidade + Benefícios: Usar dados de localização OC4IDS para mostrar 
+"projectos dentro de 5km de você" com estimativas de benefícios ("Este furo serve ~2.000 
+residentes no seu bairro"). 
+● Analisador de Acesso a Serviços: Calcular reduções de tempo de viagem de projectos 
+rodoviários, ou cobertura de área de serviço de escolas/clínicas. Mostrar: "Esta estrada reduzirá 
+seu trajecto ao hospital de 90 para 45 minutos." 
+● Orçamento detalhado para Cidadãos: Traduzir orçamentos de projectos em unidades 
+relacionáveis. "Esta ponte custa 50M meticais = o equivalente a construir 10 escolas primárias 
+OU pavimentar 25km de estradas rurais." 
+Por que funciona: Usa campos OC4IDS (locations.geometry, budget.amount, projectSector) 
+mas requer que os participantes modelem benefícios, não apenas exibam dados. Força o 
+pensamento sobre o que importa aos cidadãos. 
+Diferencial na avaliação: "Isso ajuda alguém a decidir se um projecto vale o custo? Responde 'o 
+que há nisso para minha comunidade?'" 
+3. Acesso à Transparência com Baixa Largura de Banda 
+Problema: A maioria dos cidadãos não tem smartphones ou conectividade fiável, mas precisa de 
+informações sobre projectos (verificações de status, canais de reclamação, supervisão básica). 
+Desafio: Tornar dados de infraestrutura acessíveis via USSD, SMS, bots WhatsApp ou interfaces 
+web ultra-leves. 
+Entregáveis (escolha um): 
+● Consulta de Projectos por SMS: Enviar uma localização/nome de projecto por mensagem, 
+receber status, empreiteiro, orçamento, data de conclusão. "Responda com 'ESTRADA PEMBA' 
+para verificar todos os projetos rodoviários em Pemba." 
+● Menu USSD para Fiscais: Discar *XXX# para navegar projectos por região, verificar datas 
+da última atualização, reportar problemas. Funciona em telefones básicos. 
+● Pacotes de Dados Offline: Pré-gerar resumos de projetos em HTML/PDF estáticos para 
+distribuição offline via Bluetooth/USB. Não requer internet após download. 
+Por que funciona: Reconhece a realidade de conectividade de Moçambique. Ainda usa dados 
+OC4IDS mas prioriza acesso sobre recursos. 
+Diferencial na avaliação: "Isso pode funcionar em uma conexão 2G ou sem conexão? Funciona 
+em um telefone de 5 anos?" 
+7. Critérios de Avaliação de Propostas 
+7.1 Critérios Gerais de Avaliação (Todos os Desafios) 
+Cada projecto será avaliado com base num total de 100 pontos de acordo com os critérios abaixo: 
+Critério 
+Usabilidade para o 
+Cidadão 
+Descrição 
+Podem os utilizadores não técnicos compreender o 
+resultado sem formação? A interface é autoexplicativa? 
+Responde às questões que os cidadãos realmente fazem 
+sobre projectos de infraestrutura? 
+Ponderação 
+30% 
+Qualidade de 
+Insights 
+Acionáveis 
+A solução permite ações específicas de fiscalização 
+(apresentar queixas, escrever reportagens, questionar 
+funcionários)? Os resultados são suficientemente claros 
+para informar decisões ou advocacia? 
+25% 
+Uso correto dos campos OC4IDS, cálculos válidos, 
+tratamento apropriado de dados em falta, lógica 
+defensável de deteção de anomalias 
+Precisão na 
+Interpretação de 
+Dados 
+Acesso e Inclusão Funciona em contextos de baixa largura de banda OU 
+fornece características de acessibilidade (opções de 
+idioma, clareza visual, design mobile-first) 
+Prontidão para 
+Implementação 
+Clareza da 
+Apresentação 
+Total  
+8. Prémios 
+Plano de implementação realista, requisitos claros de 
+hospedagem/manutenção, código documentado, potencial 
+para integração na plataforma CoST 
+Declaração concisa do problema, demonstração clara da 
+solução, reconhecimento honesto das limitações 
+● 1º Lugar - Tablet e telemóvel 
+● 2º Lugar - Tablet 
+● 3º Lugar - Tablet 
+9. Júri 
+O júri será composto por três membros: 
+9.1 Perfil dos membros do júri: 
+1. Especialista em Tecnologias de Informação e Inovação Digital 
+20% 
+15% 
+5% 
+5% 
+100% 
+● Perfil: Engenheiro de software, cientista de dados ou especialista em transformação 
+digital. 
+● Função: Avaliar a viabilidade técnica, usabilidade, arquitetura e inovação das soluções 
+propostas. 
+2. Representante do Sector de Infraestruturas ou Obras Públicas 
+● Perfil: Engenheiro civil ou gestor de projectos de infraestrutura. 
+● Função: Garantir que as soluções propostas atendem às necessidades práticas de gestão e 
+transparência em projectos de infraestruturas pública. 
+3. Representante da Iniciativa CoST (Nacional ou Internacional) 
+● Perfil: Coordenador, ponto focal ou especialista em governação e transparência no sector 
+da construção. 
+● Função: Avaliar o alinhamento das propostas com os princípios de transparência, 
+responsabilização e envolvimento público. 
+ 
+10. Hackathon (25 a 27 de Novembro) 
+ 
+Dia 1: Dados + Início do Sprint (Terça-feira, 25 Nov) — 08:00-16:00 
+Hora Actividade Duração Responsável Resultado 
+Esperado 
+08:00
+08:30 
+Registo + abertura 30 min Secretariado 
+CoST 
+Participantes 
+registados 
+08:30
+09:30 
+Workshop de Dados OC4IDS: 
+Estrutura de campos, acesso à 
+API, demonstrações de consultas 
+ao vivo 
+60 min Mesa de Apoio 
+OC4IDS 
+As equipas 
+conseguem aceder e 
+consultar dados 
+09:30
+10:00 
+Briefing do Desafio: 3 categorias 
+explicadas com exemplos, 
+critérios de avaliação 
+30 min Facilitadores As equipas 
+compreendem os 
+requisitos 
+10:00
+11:00 
+Formação de Equipas + Seleção 
+de Categoria: Auto-organização, 
+registo de escolha, atribuição de 
+mentor 
+60 min Equipa de 
+facilitação 
+10 equipas 
+formadas, categorias 
+definidas 
+11:00
+11:30 
+Configuração do Ambiente: 
+Demonstrações do website, 
+fontes de dados, APIs 
+30 min Mentores + TI Todas as equipas 
+têm acesso 
+funcional aos dados 
+11:30
+13:00 
+Sprint 1: Decisões de 
+arquitetura, codificação inicial 
+90 min Participantes + 
+mentores 
+Estrutura central 
+definida 
+13:00
+13:30 
+Almoço (almoço de trabalho - 
+equipas podem comer enquanto 
+programam) 
+30 min   
+13:30
+15:30 
+Sprint 2: Desenvolvimento de 
+funcionalidades 
+120 min Participantes + 
+mentores 
+25-30% de 
+funcionalidade 
+construída 
+15:30
+16:00 
+Checkpoint do Dia 1: Cada 
+equipa dá atualização de 1 min 
+(o que funciona, o que está 
+bloqueado) 
+30 min Facilitadores Mentores conhecem 
+as prioridades para o 
+Dia 2 
+Resultado Esperado: As equipas têm pipeline de dados funcional e estrutura básica de 
+funcionalidades. Conclusão realista: 25-30% do protótipo final. 
+ 
+ 
+Dia 2: Sprint de Construção (Quarta-feira, 26 Nov) — 08:00-16:00 
+Hora Actividade Duração Responsável Resultado 
+Esperado 
+08:00
+08:30 
+Sincronização matinal + clínica de 
+resolução de problemas técnicos 
+30 min Mentores Bloqueios críticos 
+do Dia 1 resolvidos 
+08:30
+12:00 
+Sprint 3: Implementação de 
+funcionalidades principais 
+210 min 
+(3,5 h) 
+Participantes 
++ mentores 
+60-70% de 
+funcionalidade 
+completa 
+12:00
+12:30 
+Almoço (almoço de trabalho) 30 min   
+12:30
+15:30 
+Sprint 4: Conclusão de 
+funcionalidades + testes iniciais 
+180 min 
+(3 h) 
+Participantes 80-85% de 
+funcionalidade 
+completa 
+15:30
+16:00 
+Checkpoint do Dia 2 + Briefing da 
+Apresentação: Atualizações de 1 
+min, depois visão geral rápida do 
+formato de pitch (5 min 
+demonstração + 5 min perguntas) 
+30 min Facilitadores As equipas 
+conhecem a 
+estrutura da 
+apresentação 
+Resultado Esperado: Funcionalidades principais operacionais. Bugs permanecem mas o caso de 
+uso primário funciona. Conclusão realista: 80-85%. 
+Dia 3: Polimento + Apresentações (Quinta-feira, 27 Nov) — 08:00-16:00 
+Hora Actividade Duração Responsável Resultado 
+Esperado 
+08:00
+08:30 
+Configuração técnica para 
+apresentações (projector, lugares 
+do júri) 
+30 min Logística + TI Local pronto 
+08:30
+10:30 
+Sprint Final: Correção de bugs, 
+preparação da demonstração, 
+gravação de vídeo de backup 
+120 min Participantes Protótipos prontos 
+para demonstração 
+10:30
+10:45 
+Congelamento do Código + 
+Submissão: Carregar código, 
+slides, vídeo de demonstração de 
+backup 
+15 min Organizadores Todos os materiais 
+submetidos 
+10:45
+11:00 
+11:00
+14:00 
+14:00
+14:15 
+14:15
+15:00 
+15:00
+15:45 
+15:45
+16:00 
+Pausa + sorteio da ordem de 
+apresentação 
+Apresentações: 10 min por 
+equipa (5 min demonstração + 5 
+min perguntas e respostas) × 18 
+equipas = 180 min 
+Votação da audiência (enquanto 
+o júri delibera) 
+Almoço (júri delibera em sala 
+separada) 
+Cerimónia de Entrega de 
+Prémios: Anúncio dos 
+vencedores (3 categorias + 
+escolha da audiência), discursos, 
+fotos 
+Encerramento: Próximos passos, 
+código QR para feedback, 
+agradecimentos 
+15 min  
+180 min 
+(3 h) 
+15 min 
+45 min 
+45 min 
+15 min 
+Júri + 
+participantes 
+Ordem de 
+apresentação 
+definida 
+Todas as soluções 
+avaliadas 
+Comunicações Escolha da 
+audiência registada 
+Júri 
+Vencedores 
+selecionados, 
+pontuações 
+finalizadas 
+CoST + 
+Parceiros 
+Secretariado 
+CoST 
+Celebração dos 
+vencedores  
+Evento concluído 
+Resultado Esperado: 3 vencedores anunciados. Cobertura mediática capturada. Plano de 
+envolvimento pós-evento comunicado. 

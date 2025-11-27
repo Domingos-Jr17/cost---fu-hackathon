@@ -1,6 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// Interface for stats data
+interface StatsData {
+  totalProjects?: number;
+  activeProjects?: number;
+  completedProjects?: number;
+  totalReports?: number;
+  provincesCovered?: number;
+  sectorsCovered?: number;
+}
 import Link from 'next/link';
 import { Search, Filter, MapPin, TrendingUp, Users, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 
@@ -8,43 +18,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-
-// Mock data for development
-const mockStats = {
-  totalProjects: 1250,
-  activeProjects: 342,
-  completedProjects: 785,
-  totalReports: 15420,
-  provincesCovered: 11,
-  sectorsCovered: 12,
-};
-
-const mockRecentProjects = [
-  {
-    id: 'mock-1',
-    nome: 'Reabilitação da Estrada Nacional EN1 - Trecho Maputo-Xai-Xai',
-    provincia: 'Maputo',
-    setor: 'Estradas',
-    estado: 'Em Andamento',
-    progresso: 65,
-  },
-  {
-    id: 'mock-2',
-    nome: 'Construção de Escola Primária Completa - Chicualacuala',
-    provincia: 'Gaza',
-    setor: 'Escolas',
-    estado: 'Concluído',
-    progresso: 100,
-  },
-  {
-    id: 'mock-3',
-    nome: 'Reabilitação do Hospital Central da Beira',
-    provincia: 'Sofala',
-    setor: 'Hospitais',
-    estado: 'Em Andamento',
-    progresso: 45,
-  },
-];
+import LoadingSpinner from '@/components/ui/loading-spinner';
+import ErrorMessage from '@/components/ui/error-message';
+import OfflineStatus from '@/components/ui/offline-status';
+import { useOfflineStats } from '@/hooks/useOfflineApi';
+import { useOfflineStatus } from '@/hooks/useOfflineApi';
 
 export default function HomePage() {
   const [isOnline, setIsOnline] = useState(true);
@@ -102,48 +80,98 @@ export default function HomePage() {
     'Saneamento', 'Transporte', 'Telecomunicações'
   ];
 
+  // Use the offline-enabled API hook for stats
+  const { data: statsData, loading: statsLoading, error: statsError, isOffline: statsOffline, refetch: refetchStats } = useOfflineStats();
+
+  // Use offline status hook for cache management
+  const { status: cacheStatus, clearAllCache } = useOfflineStatus();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <img
-                src="/logo-removebg-preview.png"
-                alt="Costant Logo"
-                className="w-32 h-16 object-contain"
-              />
-        
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600">Estatísticas e insights sobre projetos de infraestrutura</p>
+          </div>
+          <div className="flex items-center space-x-4">
+            {/* Online Status */}
+            <div className="flex items-center space-x-2 text-sm">
+              {isOnline ? (
+                <>
+                  <Wifi className="w-4 h-4 text-green-500" />
+                  <span className="text-green-600">Online</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="w-4 h-4 text-orange-500" />
+                  <span className="text-orange-600">Offline</span>
+                </>
+              )}
             </div>
 
-            <div className="flex items-center space-x-4">
-              {/* Online Status */}
-              <div className="flex items-center space-x-2 text-sm">
-                {isOnline ? (
-                  <>
-                    <Wifi className="w-4 h-4 text-green-500" />
-                    <span className="text-green-600">Online</span>
-                  </>
-                ) : (
-                  <>
-                    <WifiOff className="w-4 h-4 text-orange-500" />
-                    <span className="text-orange-600">Offline</span>
-                  </>
-                )}
-              </div>
-
-              {/* USSD Info */}
-              <div className="text-sm text-gray-600">
-                <span className="font-medium">USSD:</span> *555#
-              </div>
+            {/* USSD Info */}
+            <div className="text-sm text-gray-600">
+              <span className="font-medium">USSD:</span> *555#
             </div>
           </div>
         </div>
-      </header>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-8">
+        {/* Stats Section */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Estatísticas Gerais</h2>
+          {statsLoading ? (
+            <div className="flex justify-center py-8">
+              <LoadingSpinner text="Carregando estatísticas..." />
+            </div>
+          ) : statsError ? (
+            <ErrorMessage
+              message={`Erro ao carregar estatísticas: ${statsError}`}
+              onRetry={refetchStats}
+              className="mb-6"
+            />
+          ) : statsData ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-blue-600">{statsData.totalProjects || 0}</div>
+                  <p className="text-sm text-gray-600">Projetos</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-green-600">{statsData.activeProjects || 0}</div>
+                  <p className="text-sm text-gray-600">Ativos</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-purple-600">{statsData.completedProjects || 0}</div>
+                  <p className="text-sm text-gray-600">Concluídos</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-yellow-600">{statsData.totalReports || 0}</div>
+                  <p className="text-sm text-gray-600">Relatos</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-red-600">{statsData.provincesCovered || 0}</div>
+                  <p className="text-sm text-gray-600">Províncias</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-indigo-600">{statsData.sectorsCovered || 0}</div>
+                  <p className="text-sm text-gray-600">Setores</p>
+                </CardContent>
+              </Card>
+            </div>
+          ) : null}
+        </div>
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             A Ponte entre os Dados da Infraestrutura e Todos os Cidadãos
@@ -206,52 +234,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick Stats */}
-      <section className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-600">{mockStats.totalProjects}</div>
-              <div className="text-sm text-gray-600">Projetos Totais</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-600">{mockStats.activeProjects}</div>
-              <div className="text-sm text-gray-600">Em Andamento</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-gray-600">{mockStats.completedProjects}</div>
-              <div className="text-sm text-gray-600">Concluídos</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-orange-600">{mockStats.totalReports}</div>
-              <div className="text-sm text-gray-600">Relatos</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-purple-600">{mockStats.provincesCovered}</div>
-              <div className="text-sm text-gray-600">Províncias</div>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-red-600">{mockStats.sectorsCovered}</div>
-              <div className="text-sm text-gray-600">Setores</div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
 
       {/* Recent Projects */}
       <section className="container mx-auto px-4 py-8">
@@ -266,71 +248,90 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockRecentProjects.map((project) => (
-            <Card key={project.id} className="hover:shadow-md transition-shadow">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg line-clamp-2">{project.nome}</CardTitle>
-                    <CardDescription className="flex items-center mt-2">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {project.provincia} • {project.setor}
-                    </CardDescription>
+          {/* This section will be populated with actual project data when API is implemented */}
+          {statsLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="animate-pulse">
+                <CardContent className="p-6">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded w-full"></div>
+                </CardContent>
+              </Card>
+            ))
+          ) : statsError ? (
+            <div className="col-span-full text-center py-8">
+              <ErrorMessage message={`Erro ao carregar projetos recentes: ${statsError}`} onRetry={refetchStats} />
+            </div>
+          ) : (
+            Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg line-clamp-2">Projeto de exemplo {index + 1}</CardTitle>
+                      <CardDescription className="flex items-center mt-2">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        Maputo • Estradas
+                      </CardDescription>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Status Badge */}
-                  <div className="flex items-center justify-between">
-                    <Badge
-                      className={
-                        project.estado === 'Concluído'
-                          ? 'badge-success'
-                          : project.estado === 'Em Andamento'
-                          ? 'badge-warning'
-                          : 'badge-secondary'
-                      }
-                    >
-                      {project.estado}
-                    </Badge>
-                    <span className="text-sm text-gray-600">{project.progresso}%</span>
-                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Status Badge */}
+                    <div className="flex items-center justify-between">
+                      <Badge
+                        className={
+                          index % 3 === 0
+                            ? 'bg-green-100 text-green-800'
+                            : index % 3 === 1
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }
+                      >
+                        {index % 3 === 0 ? 'Concluído' : index % 3 === 1 ? 'Em Andamento' : 'Planejado'}
+                      </Badge>
+                      <span className="text-sm text-gray-600">{Math.floor(Math.random() * 40) + 40}%</span>
+                    </div>
 
-                  {/* Progress Bar */}
-                  <div className="progress">
-                    <div
-                      className="progress-bar"
-                      style={{
-                        width: `${project.progresso}%`,
-                        backgroundColor:
-                          project.estado === 'Concluído'
-                            ? '#10b981'
-                            : project.estado === 'Em Andamento'
-                            ? '#f59e0b'
-                            : '#6b7280',
-                      }}
-                    />
-                  </div>
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="h-2.5 rounded-full"
+                        style={{
+                          width: `${Math.floor(Math.random() * 40) + 40}%`,
+                          backgroundColor:
+                            index % 3 === 0
+                              ? '#10b981'  // green for completed
+                              : index % 3 === 1
+                                ? '#f59e0b'  // yellow for ongoing
+                                : '#6b7280',  // gray for planned
+                        }}
+                      />
+                    </div>
 
-                  {/* Actions */}
-                  <div className="flex space-x-2">
-                    <Link href={`/projects/${project.id}`} className="flex-1">
-                      <Button variant="outline" className="w-full" size="sm">
-                        Ver Detalhes
-                      </Button>
-                    </Link>
-                    <Link href={`/reports/new?projectId=${project.id}`} className="flex-1">
-                      <Button className="w-full" size="sm">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        Relatar
-                      </Button>
-                    </Link>
+                    {/* Actions */}
+                    <div className="flex space-x-2">
+                      <Link href={`/projects/${index}`} className="flex-1">
+                        <Button variant="outline" className="w-full" size="sm">
+                          Ver Detalhes
+                        </Button>
+                      </Link>
+                      <Link href={`/reports/new?projectId=${index}`} className="flex-1">
+                        <Button className="w-full" size="sm">
+                          <AlertCircle className="w-4 h-4 mr-1" />
+                          Relatar
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </section>
 

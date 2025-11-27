@@ -1,4 +1,4 @@
-import { IsString, IsOptional, Max } from 'class-validator';
+import { IsString, IsOptional, Max, IsNotEmpty, MinLength, MaxLength, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UssdRequestDto {
@@ -17,7 +17,8 @@ export class UssdRequestDto {
   })
   @IsString()
   @IsOptional()
-  @Max(64)
+  @MinLength(0)
+  @MaxLength(64)
   readonly phoneNumber?: string;
 
   @ApiProperty({
@@ -26,7 +27,7 @@ export class UssdRequestDto {
   })
   @IsString()
   @IsOptional()
-  @Max(64)
+  @Length(0, 160)
   readonly text?: string;
 
   @ApiProperty({
@@ -35,6 +36,6 @@ export class UssdRequestDto {
   })
   @IsString()
   @IsOptional()
-  @Max(64)
+  @Length(0, 64)
   readonly sessionId?: string;
 }

@@ -31,8 +31,10 @@ export class UssdController {
   ): Promise<UssdResponseDto> {
     try {
       // In real implementation, this would extract from telecom gateway
-      const phoneNumber = request.phoneNumber || '';
-      const phoneHash = phoneNumber ? HashUtil.hashPhone(phoneNumber) : '';
+      let phoneHash: string | null = null;
+      if (request.phoneNumber && typeof request.phoneNumber === 'string') {
+        phoneHash = HashUtil.hashPhone(request.phoneNumber);
+      }
 
       return await this.ussdService.processUssdRequest(request, phoneHash);
     } catch (error) {

@@ -1,50 +1,22 @@
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
-interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
   text?: string;
+  className?: string;
 }
 
-const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
-  ({ className, size = 'md', text, ...props }, ref) => {
-    const sizeClasses = {
-      sm: 'w-4 h-4',
-      md: 'w-6 h-6',
-      lg: 'w-8 h-8',
-    };
+export default function LoadingSpinner({ size = 'md', text, className = '' }: LoadingSpinnerProps) {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12'
+  };
 
-    const borderClasses = {
-      sm: 'border-2',
-      md: 'border-3',
-      lg: 'border-4',
-    };
-
-    return (
-      <div
-        ref={ref}
-        className={cn('flex items-center justify-center', className)}
-        {...props}
-      >
-        <div className="relative">
-          <div
-            className={cn(
-              'animate-spin rounded-full border-blue-600 border-t-transparent',
-              sizeClasses[size],
-              borderClasses[size]
-            )}
-          />
-        </div>
-        {text && (
-          <span className="ml-3 text-sm text-gray-600 animate-pulse">
-            {text}
-          </span>
-        )}
-      </div>
-    );
-  }
-);
-
-LoadingSpinner.displayName = 'LoadingSpinner';
-
-export { LoadingSpinner };
+  return (
+    <div className={`flex flex-col items-center justify-center ${className}`}>
+      <Loader2 className={`animate-spin text-blue-600 ${sizeClasses[size]}`} />
+      {text && <p className="mt-2 text-sm text-gray-600">{text}</p>}
+    </div>
+  );
+}
